@@ -1,7 +1,7 @@
 #include "WinStrategy.hpp"
-#include "helpers.hpp"
+//#include "helpers.hpp"
 
-Action WinStrategy::getMinerCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface)
+inline Action WinStrategy::getMinerCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface)
 {
     vector<EntityType> validAutoAttackTargets;
         //if (entity.entityType == BUILDER_UNIT) {

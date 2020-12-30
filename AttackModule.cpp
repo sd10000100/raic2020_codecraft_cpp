@@ -1,9 +1,88 @@
 #include "WinStrategy.hpp"
-#include "helpers.hpp"
+
+//#include "helpers/AStar.h"
+//#include "helpers.hpp"
+#include <iostream>
+#include <cmath>
+
+inline double **array_generator(unsigned int dim1, unsigned int dim2) {
+    double **ptrary = new double * [dim1];
+    for (int i = 0; i < dim1; i++) {
+        ptrary[i] = new double [dim2];
+    }
+    return ptrary;
+}
 
 
-Action WinStrategy::getAttackCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface)
+inline int signedMax(int a, int b)
 {
+    if(abs(a)>=abs(b))
+        return a;
+    else return b;
+
+}
+inline int getSign(int x)
+{
+    if (x>0)
+        return 1;
+    else return -1;
+}
+
+inline void PutPotential(double power, double step, double** matr, int sizeX, int sizeY, Vec2Int p)
+{
+    int s = 0;
+    int x = int(abs(floor(p.x)));
+    int y = int(abs(floor(p.y)));
+    for(int l = 0;l<fabs(power);l=l+step, s++)
+    {
+        for(int temp = y-s;temp<=s+y;temp++)
+        {
+            int tempArrMinX = int(floor(x-s));
+            int tempArrMaxX = int(floor(x+s));
+            if(tempArrMinX>=0 && tempArrMinX<sizeX && temp>=0 && temp<sizeY)
+                matr[tempArrMinX][temp]=signedMax(matr[tempArrMinX][temp],getSign(power)*(abs(power)-l));
+            if(tempArrMaxX<sizeX && tempArrMaxX>=0 && temp>=0 && temp<sizeY)
+                matr[tempArrMaxX][temp]=signedMax(matr[tempArrMaxX][temp],getSign(power)*(abs(power)-l));
+        }
+        for(int temp = x-s+1;temp<=s+x-1;temp++)
+        {
+            int tempArrMinY = int(floor(y-s));
+            int tempArrMaxY = int(floor(y+s));
+            if(tempArrMinY>=0 && tempArrMinY<sizeY && temp>=0 && temp<sizeX)
+                matr[temp][tempArrMinY]=signedMax(matr[temp][tempArrMinY],getSign(power)*(abs(power)-l));
+            if(tempArrMaxY>=0 && tempArrMaxY<sizeY  && temp>=0 && temp<sizeX)
+                matr[temp][tempArrMaxY]=signedMax(matr[temp][tempArrMaxY],getSign(power)*(abs(power)-l));
+        }
+    }
+}
+
+inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface)
+{
+    //AStar aStarPathfinder = AStar();
+    int width = playerView.mapSize;
+    int height = playerView.mapSize;
+    double **a = array_generator(width+1,height+1);
+    for (int i=0;i<width;i++) {
+        for (int j=0;j<height;j++) {
+            a[i][j] = 0;
+        }
+    }
+
+
+    for (size_t j = 0; j < playerView.entities.size(); j++) {
+        const Entity& enemyEntity = playerView.entities[j];
+        if (enemyEntity.playerId == nullptr && enemyEntity.entityType==RESOURCE) { //&& (rangeCount+meleeCount>40 || distanceSqr(enemyEntity.position, Vec2Int(0,0))<40*40)
+            PutPotential(5, 5, a, width, height, enemyEntity.position);
+        }
+    }
+
+    for (int i=0;i<width;i++) {
+            for (int j=0;j<height;j++) {
+                cerr << a[i][j]<<' ';
+            }
+            cerr<<endl;
+        }
+
      vector<EntityType> validAutoAttackTargets;
       
     validAutoAttackTargets.push_back(BUILDER_UNIT);

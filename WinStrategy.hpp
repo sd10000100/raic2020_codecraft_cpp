@@ -6,7 +6,8 @@
 #include "Squard.hpp"
 #include "Citadel.hpp"
 #include "EntityBuilder.hpp"
-
+#include "helpers.hpp"
+//#include "helpers/InfluenceMapBuilder.h"
 #include <memory>
 #include <map>
 #include <vector>
@@ -45,6 +46,34 @@ struct StrategyInfo
         resCount = 0;
     }
 };
+
+// inline int distanceSqr(Vec2Int a, Vec2Int b) {
+//     return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
+// }
+
+
+// inline bool IsPlaceEmptyForHouse(PlayerView playerView, Vec2Int p, int identity, int size)
+// {
+//     for ( const Entity &entity: playerView.entities) {
+//         if(p.x<=entity.position.x && p.x+size>entity.position.x && p.y<=entity.position.y && p.y+size>entity.position.y)
+//             return false;
+//     }
+//     return true;
+// }
+
+// inline bool is_building(EntityType entity){
+//         switch(entity) {
+//             case WALL:
+//             case BUILDER_BASE:
+//             case MELEE_BASE:
+//             case RANGED_BASE:
+//             case HOUSE:
+//             case TURRET:
+//                 return true;
+//             default: // if nothing else matches
+//                 return false;
+//         }
+// }
  
 class WinStrategy {
 public:

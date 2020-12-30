@@ -1,8 +1,8 @@
 #include "WinStrategy.hpp"
-#include "helpers.hpp"
+//#include "helpers.hpp"
 #include "MagicProperties.hpp"
 
-Action WinStrategy::getCitadelCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface)
+inline Action WinStrategy::getCitadelCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface)
 {    
     int countRangedUnit = playerView.entityProperties.at(RANGED_UNIT).buildScore+info.rangeCount;
     int countMeleeUnit = playerView.entityProperties.at(MELEE_UNIT).buildScore+info.rangeCount;

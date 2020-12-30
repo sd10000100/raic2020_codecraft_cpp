@@ -1,5 +1,5 @@
 #include "WinStrategy.hpp"
-#include "helpers.hpp"
+//#include "helpers.hpp"
 #include "BaseDevelopmentScheme.hpp"
 #include <exception>
 #include <map>
@@ -10,6 +10,7 @@
 #include "MinerModule.cpp"
 #include "BuilderModule.cpp"
 using namespace std;
+
 
 
 WinStrategy::WinStrategy(){
