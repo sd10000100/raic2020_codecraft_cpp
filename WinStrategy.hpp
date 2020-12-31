@@ -7,7 +7,8 @@
 #include "Citadel.hpp"
 #include "EntityBuilder.hpp"
 #include "helpers.hpp"
-//#include "helpers/InfluenceMapBuilder.h"
+#include "helpers/InfluenceMapBuilder.h"
+#include "helpers/AStar.h"
 #include <memory>
 #include <map>
 #include <vector>
