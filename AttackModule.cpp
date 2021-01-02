@@ -5,57 +5,6 @@
 #include <iostream>
 #include <cmath>
 
-// inline double **array_generator(unsigned int dim1, unsigned int dim2) {
-//     double **ptrary = new double * [dim1];
-//     for (int i = 0; i < dim1; i++) {
-//         ptrary[i] = new double [dim2];
-//     }
-//     return ptrary;
-// }
-
-
-// inline int signedMax(int a, int b)
-// {
-//     if(abs(a)>=abs(b))
-//         return a;
-//     else return b;
-
-// }
-// inline int getSign(int x)
-// {
-//     if (x>0)
-//         return 1;
-//     else return -1;
-// }
-
-// inline void PutPotential(double power, double step, double** matr, int sizeX, int sizeY, Vec2Int p)
-// {
-//     int s = 0;
-//     int x = int(abs(floor(p.x)));
-//     int y = int(abs(floor(p.y)));
-//     for(int l = 0;l<fabs(power);l=l+step, s++)
-//     {
-//         for(int temp = y-s;temp<=s+y;temp++)
-//         {
-//             int tempArrMinX = int(floor(x-s));
-//             int tempArrMaxX = int(floor(x+s));
-//             if(tempArrMinX>=0 && tempArrMinX<sizeX && temp>=0 && temp<sizeY)
-//                 matr[tempArrMinX][temp]=signedMax(matr[tempArrMinX][temp],getSign(power)*(abs(power)-l));
-//             if(tempArrMaxX<sizeX && tempArrMaxX>=0 && temp>=0 && temp<sizeY)
-//                 matr[tempArrMaxX][temp]=signedMax(matr[tempArrMaxX][temp],getSign(power)*(abs(power)-l));
-//         }
-//         for(int temp = x-s+1;temp<=s+x-1;temp++)
-//         {
-//             int tempArrMinY = int(floor(y-s));
-//             int tempArrMaxY = int(floor(y+s));
-//             if(tempArrMinY>=0 && tempArrMinY<sizeY && temp>=0 && temp<sizeX)
-//                 matr[temp][tempArrMinY]=signedMax(matr[temp][tempArrMinY],getSign(power)*(abs(power)-l));
-//             if(tempArrMaxY>=0 && tempArrMaxY<sizeY  && temp>=0 && temp<sizeX)
-//                 matr[temp][tempArrMaxY]=signedMax(matr[temp][tempArrMaxY],getSign(power)*(abs(power)-l));
-//         }
-//     }
-// }
-
 inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface)
 {
     //AStar aStarPathfinder = AStar();
@@ -78,21 +27,7 @@ inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& player
             PutPotential(8, 2, a, width, height, enemyEntity.position);
         }
     }
-    //поиск пути работает, стоит прикрутить к отряду и считать
-//     AStar astar = AStar();
-//     std::vector<Vec2Int> ress = astar.FindPath(Vec2Int(0,0),Vec2Int(79,79), 80,80, a);
-//     for(Vec2Int v : ress)
-//                 {
-//                     PutPotential(1, 1, a, width, height, v);
-//                 }
-//     for (int i=0;i<width;i++) {
-//             for (int j=height-1;j>=0;j--) {
-//                     cerr << a[j][i]<<' ';
-//             }
-//             cerr<<endl;
-//         }
-// cerr<<endl;
-// cerr<<endl;
+    AStar astar = AStar();
      vector<EntityType> validAutoAttackTargets;
       
     validAutoAttackTargets.push_back(BUILDER_UNIT);
@@ -104,32 +39,60 @@ inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& player
     validAutoAttackTargets.push_back(BUILDER_BASE); 
     validAutoAttackTargets.push_back(MELEE_BASE); 
     validAutoAttackTargets.push_back(RANGED_BASE);
-    
+
+
+    shared_ptr<MoveAction> moveAction = nullptr;
+    shared_ptr<BuildAction> buildAction = nullptr;
+    shared_ptr<RepairAction> repairAction = nullptr;
+    shared_ptr<AttackAction> attackAction = nullptr;
+
+    Vec2Int center = squardArmy.getCenter();
+    const Entity *nearestEnemy = nullptr;
+    for (size_t j = 0; j < playerView.entities.size(); j++) {
+        const Entity& enemyEntity = playerView.entities[j];
+        if (enemyEntity.playerId != nullptr && *enemyEntity.playerId != playerView.myId) {
+            if (nearestEnemy == nullptr ||
+                            distanceSqr(center, enemyEntity.position) <
+                                distanceSqr(center, nearestEnemy->position)
+                            ) {
+                        nearestEnemy = &enemyEntity;
+                    }
+        }
+    }
+
+    //std::vector<Vec2Int> ress = astar.FindPath(center,nearestEnemy->position, 80,80, a);
+    //ress = astar.FindPath(Vec2Int(0,0),Vec2Int(79,79), 80,80, a);
+     if (nearestEnemy != nullptr && (playerView.currentTick%20==0 )){//squardArmy.pathToTarget.size()==0 || 
+        squardArmy.pathToTarget = astar.FindPath(center,nearestEnemy->position, 80,80, a);
+     }
+//     for(Vec2Int v : ress)
+//                 {
+//                     PutPotential(1, 1, a, width, height, v);
+//                 }
+//     for (int i=0;i<width;i++) {
+//             for (int j=height-1;j>=0;j--) {
+//                     cerr << a[j][i]<<' ';
+//             }
+//             cerr<<endl;
+//         }
+// 
+cerr<<squardArmy.pathToTarget.size();
+cerr<<endl;
+
     std::map<int, Entity>::iterator iter = squardArmy.units.begin();
     while (iter != squardArmy.units.end()) {
         const Entity& entity = iter->second;
         const EntityProperties& properties = playerView.entityProperties.at(entity.entityType);
-        shared_ptr<MoveAction> moveAction = nullptr;
-        shared_ptr<BuildAction> buildAction = nullptr;
-        shared_ptr<RepairAction> repairAction = nullptr;
-        shared_ptr<AttackAction> attackAction = nullptr;
 
 
-            const Entity *nearestEnemy = nullptr;
-                for (size_t j = 0; j < playerView.entities.size(); j++) {
-                    const Entity& enemyEntity = playerView.entities[j];
-                    if (enemyEntity.playerId != nullptr && *enemyEntity.playerId != playerView.myId) { //&& (rangeCount+meleeCount>40 || distanceSqr(enemyEntity.position, Vec2Int(0,0))<40*40)
-                        if (nearestEnemy == nullptr ||
-                                        distanceSqr(entity.position, enemyEntity.position) <
-                                            distanceSqr(entity.position, nearestEnemy->position)
-                                        ) {
-                                    nearestEnemy = &enemyEntity;
-                                }
-                    }
-                }
+
+           
                 if (nearestEnemy != nullptr){
+                    Vec2Int target = nearestEnemy->position;
+                    if(squardArmy.pathToTarget.size()>0)
+                        target = squardArmy.pathToTarget[1];
                     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
-                        nearestEnemy->position,
+                        target,
                         true,
                         true));
                     attackAction = shared_ptr<AttackAction>(new AttackAction(

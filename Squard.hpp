@@ -17,6 +17,7 @@ enum SquardType {
 struct Squard {
 public:
     map<int,Entity> units;
+    vector<Vec2Int> pathToTarget;
     Squard(){};
     
     void addAndUpdate(int presentTick, Entity entity){
@@ -38,6 +39,22 @@ public:
             else
                 ++sBIter;
         }
+    }
+
+    Vec2Int getCenter()
+    {
+        std::map<int, Entity>::iterator iter = units.begin();
+        int sumx = 0;
+        int sumy = 0;
+        while (iter != units.end()) {
+            sumx+=iter->second.position.x;
+            sumy+=iter->second.position.y;
+            ++iter;
+        }
+
+        if(units.size()==0)
+            return Vec2Int(0,0);
+        return Vec2Int(sumx/units.size(),sumy/units.size());
     }
 
 private:

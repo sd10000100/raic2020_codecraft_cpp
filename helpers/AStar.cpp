@@ -65,10 +65,10 @@ std::vector<PathNode> AStar::GetNeighbours(PathNode pathNode, Vec2Int goal,int s
     neighbourPoints.push_back(Vec2Int(x, y + 1));
     neighbourPoints.push_back(Vec2Int(x, y - 1));
 
-    neighbourPoints.push_back(Vec2Int(x + 1, y-1));
-    neighbourPoints.push_back(Vec2Int(x - 1, y-1));
-    neighbourPoints.push_back(Vec2Int(x+1, y + 1));
-    neighbourPoints.push_back(Vec2Int(x-1, y + 1));
+    // neighbourPoints.push_back(Vec2Int(x + 1, y-1));
+    // neighbourPoints.push_back(Vec2Int(x - 1, y-1));
+    // neighbourPoints.push_back(Vec2Int(x+1, y + 1));
+    // neighbourPoints.push_back(Vec2Int(x-1, y + 1));
 
     for (Vec2Int point : neighbourPoints)
     {
@@ -105,7 +105,7 @@ std::vector<PathNode> AStar::GetNeighbours(PathNode pathNode, Vec2Int goal,int s
 //        }
         neighbourNode.path.push_back(Vec2Int(pathNode.Position.x, pathNode.Position.y));
         neighbourNode.PathLengthFromStart = pathNode.PathLengthFromStart +1,
-                neighbourNode.HeuristicEstimatePathLength =neighbourNode.potential;// GetHeuristicPathLength(point, goal);
+                neighbourNode.HeuristicEstimatePathLength = neighbourNode.potential;// GetHeuristicPathLength(point, goal);
         result.push_back(neighbourNode);
     }
     return result;
@@ -167,7 +167,7 @@ std::vector<Vec2Int> AStar::FindPath(Vec2Int from, Vec2Int to, int sizeX, int si
             // Шаг 8.
             if (idleNodeIter == Idle.end())
                 Idle.push_back(neighbourNode);
-            else if (idleNodeIter->PathLengthFromStart > neighbourNode.PathLengthFromStart) {
+            else if (idleNodeIter->PathLengthFromStart >= neighbourNode.PathLengthFromStart) {
                 // Шаг 9.
 
                 idleNodeIter->CameFrom = &neighbourNode;
