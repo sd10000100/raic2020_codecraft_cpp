@@ -3,6 +3,7 @@
 
 #include "model/Model.hpp"
 #include <map>
+#include <cmath>
 
 using namespace std;
 
@@ -27,6 +28,7 @@ public:
                     units[entity.id].tick = presentTick;
                 }
                 else {
+                    units[entity.id].position = entity.position;
                     units[entity.id].tick = presentTick;
         }
     }
@@ -55,6 +57,41 @@ public:
         if(units.size()==0)
             return Vec2Int(0,0);
         return Vec2Int(sumx/units.size(),sumy/units.size());
+    }
+
+    Vec2Int getDispersion()
+    {
+        auto mean = getCenter();
+        std::map<int, Entity>::iterator iter = units.begin();
+        int sumx = 0;
+        int sumy = 0;
+        while (iter != units.end()) {
+            sumx+=(iter->second.position.x-mean.x)*(iter->second.position.x-mean.x);
+            sumy+=(iter->second.position.y-mean.y)*(iter->second.position.y-mean.y);
+            ++iter;
+        }
+
+        if(units.size()==0)
+            return Vec2Int(0,0);
+        return Vec2Int(sumx/units.size(),sumy/units.size());
+    }
+
+    double getPercentageNormalDistribution()
+    {
+        auto mean = getCenter();
+        auto disp = getDispersion();
+        auto dispersionX = sqrt(disp.x);
+        auto dispersionY = sqrt(disp.y);
+
+        std::map<int, Entity>::iterator iter = units.begin();
+        double sum = 0;
+        while (iter != units.end()) {
+            if( iter->second.position.x>=mean.x-dispersionX-1 && iter->second.position.x<=mean.x+dispersionX+1 &&
+                iter->second.position.y>=mean.y-dispersionY-1 && iter->second.position.y<=mean.y+dispersionY+1)
+                sum++;
+            ++iter;
+        }
+        return (sum/(double)units.size())*100;
     }
 
 private:

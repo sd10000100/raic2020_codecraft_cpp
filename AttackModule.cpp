@@ -24,7 +24,7 @@ inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& player
             PutPotential(5, 5, a, width, height, enemyEntity.position);
         }
         if (enemyEntity.playerId != nullptr && *enemyEntity.playerId!=playerView.myId) { //&& (rangeCount+meleeCount>40 || distanceSqr(enemyEntity.position, Vec2Int(0,0))<40*40)
-            PutPotential(8, 2, a, width, height, enemyEntity.position);
+            PutPotential(-60, 1, a, width, height, enemyEntity.position);
         }
     }
     AStar astar = AStar();
@@ -60,35 +60,51 @@ inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& player
         }
     }
 
-    //std::vector<Vec2Int> ress = astar.FindPath(center,nearestEnemy->position, 80,80, a);
-    //ress = astar.FindPath(Vec2Int(0,0),Vec2Int(79,79), 80,80, a);
-     if (nearestEnemy != nullptr && (playerView.currentTick%20==0 )){//squardArmy.pathToTarget.size()==0 || 
-        squardArmy.pathToTarget = astar.FindPath(center,nearestEnemy->position, 80,80, a);
-     }
+    //  if (nearestEnemy != nullptr && (playerView.currentTick%20==0 )){//squardArmy.pathToTarget.size()==0 || 
+    //     squardArmy.pathToTarget = astar.FindPath(center,nearestEnemy->position, 80,80, a);
+    //  }
+
+    auto ggg =  GetMinPotentialByRadius(25, a, 80,80, center);
 //     for(Vec2Int v : ress)
 //                 {
 //                     PutPotential(1, 1, a, width, height, v);
 //                 }
-//     for (int i=0;i<width;i++) {
-//             for (int j=height-1;j>=0;j--) {
-//                     cerr << a[j][i]<<' ';
-//             }
-//             cerr<<endl;
-//         }
+    // for (int i=0;i<width;i++) {
+    //         for (int j=height-1;j>=0;j--) {
+    //                 cerr << a[j][i]<<' ';
+    //         }
+    //         cerr<<endl;
+    //     }
 // 
-cerr<<squardArmy.pathToTarget.size();
+// cerr<<squardArmy.pathToTarget.size();
+// cerr<<endl;
+cerr<<center.x<<' '<<center.y;
 cerr<<endl;
 
+
+double percentageNormalDistribution = squardArmy.getPercentageNormalDistribution();
+cerr<<percentageNormalDistribution<<'%';
+cerr<<endl;
     std::map<int, Entity>::iterator iter = squardArmy.units.begin();
     while (iter != squardArmy.units.end()) {
         const Entity& entity = iter->second;
         const EntityProperties& properties = playerView.entityProperties.at(entity.entityType);
 
-
+                if(percentageNormalDistribution<60)
+                {
+                    moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
+                        center,
+                        true,
+                        true));
+                    attackAction = shared_ptr<AttackAction>(new AttackAction(
+                        nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+                    
+                }
+                else{
 
            
                 if (nearestEnemy != nullptr){
-                    Vec2Int target = nearestEnemy->position;
+                    Vec2Int target = ggg;
                     if(squardArmy.pathToTarget.size()>0)
                         target = squardArmy.pathToTarget[1];
                     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
@@ -122,7 +138,7 @@ cerr<<endl;
                     attackAction = shared_ptr<AttackAction>(new AttackAction(
                         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
                 }
-
+    }
         res.entityActions[entity.id] = EntityAction(
             moveAction,
             buildAction,
