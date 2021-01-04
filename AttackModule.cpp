@@ -64,7 +64,7 @@ inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& player
     //     squardArmy.pathToTarget = astar.FindPath(center,nearestEnemy->position, 80,80, a);
     //  }
 
-    auto ggg =  GetMinPotentialByRadius(25, a, 80,80, center);
+    auto goodPointInInflMap =  GetMinPotentialByRadius(25, a, 80,80, center);
 //     for(Vec2Int v : ress)
 //                 {
 //                     PutPotential(1, 1, a, width, height, v);
@@ -90,23 +90,29 @@ cerr<<endl;
         const Entity& entity = iter->second;
         const EntityProperties& properties = playerView.entityProperties.at(entity.entityType);
 
-                if(percentageNormalDistribution<60)
-                {
-                    moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
-                        center,
-                        true,
-                        true));
+        if(percentageNormalDistribution<60)
+        {
+            moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
+                center,
+                true,
+                true));
+            attackAction = shared_ptr<AttackAction>(new AttackAction(
+                nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+            
+        }
+        else{
+
+    
+            if (nearestEnemy != nullptr){
+                if(distanceSqr(entity.position, nearestEnemy->position)<=properties.sightRange*properties.sightRange){
+                    moveAction = nullptr;
                     attackAction = shared_ptr<AttackAction>(new AttackAction(
                         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
-                    
                 }
                 else{
-
-           
-                if (nearestEnemy != nullptr){
-                    Vec2Int target = ggg;
-                    if(squardArmy.pathToTarget.size()>0)
-                        target = squardArmy.pathToTarget[1];
+                    Vec2Int target = goodPointInInflMap;
+                    // if(squardArmy.pathToTarget.size()>0)
+                    //     target = squardArmy.pathToTarget[1];
                     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
                         target,
                         true,
@@ -118,27 +124,30 @@ cerr<<endl;
                         if( it != attackers.end() )
                             attackers.erase (it);
                 }
-                else if(!attackers.count(entity.id) || (attackers[entity.id].x == entity.position.x && attackers[entity.id].y == entity.position.y)){ 
-                     int randx = rand() % 80;
-                     int randy = rand() % 80;
-                    moveAction = shared_ptr<MoveAction>(new MoveAction(Vec2Int(randx, randy),
-                        //nearestEnemy->position,
-                        true,
-                        true));
-                    attackAction = shared_ptr<AttackAction>(new AttackAction(
-                        nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
-                   attackers[entity.id] = Vec2Int(randx, randy);
-             
-                }
-                else{
-                    moveAction = shared_ptr<MoveAction>(new MoveAction( attackers[entity.id],
-                        //nearestEnemy->position,
-                        true,
-                        true));
-                    attackAction = shared_ptr<AttackAction>(new AttackAction(
-                        nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
-                }
-    }
+            }
+
+            //это когда в тумане нихрена нету
+            else if(!attackers.count(entity.id) || (attackers[entity.id].x == entity.position.x && attackers[entity.id].y == entity.position.y)){ 
+                int randx = rand() % 80;
+                int randy = rand() % 80;
+                moveAction = shared_ptr<MoveAction>(new MoveAction(Vec2Int(randx, randy),
+                    //nearestEnemy->position,
+                    true,
+                    true));
+                attackAction = shared_ptr<AttackAction>(new AttackAction(
+                    nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+            attackers[entity.id] = Vec2Int(randx, randy);
+        
+            }
+            else{
+                moveAction = shared_ptr<MoveAction>(new MoveAction( attackers[entity.id],
+                    //nearestEnemy->position,
+                    true,
+                    true));
+                attackAction = shared_ptr<AttackAction>(new AttackAction(
+                    nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+            }
+        }
         res.entityActions[entity.id] = EntityAction(
             moveAction,
             buildAction,

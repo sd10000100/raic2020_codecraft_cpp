@@ -19,6 +19,7 @@ struct Squard {
 public:
     map<int,Entity> units;
     vector<Vec2Int> pathToTarget;
+    SquardType squadGoal;
     Squard(){};
     
     void addAndUpdate(int presentTick, Entity entity){
