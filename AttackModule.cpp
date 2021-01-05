@@ -60,6 +60,7 @@ inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& player
         }
     }
 
+
     //  if (nearestEnemy != nullptr && (playerView.currentTick%20==0 )){//squardArmy.pathToTarget.size()==0 || 
     //     squardArmy.pathToTarget = astar.FindPath(center,nearestEnemy->position, 80,80, a);
     //  }
@@ -103,13 +104,30 @@ cerr<<endl;
         else{
 
     
-            if (nearestEnemy != nullptr){
-                if(distanceSqr(entity.position, nearestEnemy->position)<=properties.sightRange*properties.sightRange){
+            if (nearestEnemy != nullptr){    
+
+                int attack = properties.attack->attackRange;
+                //attack->attack_range;
+
+                vector<int>  misfortuneCompanion =  squardArmy.entitiesCloserEqToPoint(nearestEnemy->position,properties.sightRange+1);
+                int distSQRToEnemy = distanceSqr(entity.position, nearestEnemy->position);
+
+                if(distSQRToEnemy==attack*attack)
+                {
                     moveAction = nullptr;
                     attackAction = shared_ptr<AttackAction>(new AttackAction(
                         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
                 }
-                else{
+                else if(distSQRToEnemy>attack*attack && misfortuneCompanion.size()>1)
+                {
+                    moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
+                        nearestEnemy->position,
+                        true,
+                        true));
+                    attackAction = shared_ptr<AttackAction>(new AttackAction(
+                        nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+                }
+                else {
                     Vec2Int target = goodPointInInflMap;
                     // if(squardArmy.pathToTarget.size()>0)
                     //     target = squardArmy.pathToTarget[1];
@@ -124,6 +142,45 @@ cerr<<endl;
                         if( it != attackers.end() )
                             attackers.erase (it);
                 }
+
+
+                // if(distSQRToEnemy<attack*attack){
+                //     moveAction = nullptr;
+                //     attackAction = shared_ptr<AttackAction>(new AttackAction(
+                //         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+                // }
+                // else if(misfortuneСompanion.size()>1 ){
+                //     Vec2Int target = goodPointInInflMap;
+                //     // if(squardArmy.pathToTarget.size()>0)
+                //     //     target = squardArmy.pathToTarget[1];
+                //     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
+                //         target,
+                //         true,
+                //         true));
+                //     attackAction = shared_ptr<AttackAction>(new AttackAction(
+                //         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+
+                //     std::map<int,Vec2Int>::iterator it = attackers.find(entity.id);             // by iterator (b), leaves acdefghi.
+                //         if( it != attackers.end() )
+                //             attackers.erase (it);
+                // }
+                // else
+                // {
+                //     Vec2Int target = goodPointInInflMap;
+                //     // if(squardArmy.pathToTarget.size()>0)
+                //     //     target = squardArmy.pathToTarget[1];
+                //     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
+                //         target,
+                //         true,
+                //         true));
+                //     attackAction = shared_ptr<AttackAction>(new AttackAction(
+                //         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+
+                //     std::map<int,Vec2Int>::iterator it = attackers.find(entity.id);             // by iterator (b), leaves acdefghi.
+                //         if( it != attackers.end() )
+                //             attackers.erase (it);
+                // }
+                
             }
 
             //это когда в тумане нихрена нету

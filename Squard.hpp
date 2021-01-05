@@ -2,6 +2,7 @@
 #define _SQUARD_HPP_
 
 #include "model/Model.hpp"
+#include "helpers.hpp"
 #include <map>
 #include <cmath>
 
@@ -93,6 +94,19 @@ public:
             ++iter;
         }
         return (sum/(double)units.size())*100;
+    }
+
+    vector<int> entitiesCloserEqToPoint(Vec2Int p,int dist)
+    {
+        std::vector<int> result = {};
+        std::map<int, Entity>::iterator iter = units.begin();
+        while (iter != units.end()) {
+            if(distanceSqr(iter->second.position, p)<=dist*dist) //&& (sourceEntityId==0 || sourceEntityId!=iter->second.id) 
+                result.push_back(iter->second.id);
+            ++iter;
+            
+        }
+        return result;
     }
 
 private:

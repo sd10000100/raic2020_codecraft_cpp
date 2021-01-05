@@ -19,7 +19,32 @@ inline Action WinStrategy::getBuildCommand(Action res, const PlayerView& playerV
         shared_ptr<RepairAction> repairAction = nullptr;
         shared_ptr<AttackAction> attackAction = nullptr;
 int houseCost = playerView.entityProperties.at(HOUSE).buildScore;
-        if(buildQueue.size()>0 && info.resCount>houseCost){
+
+
+        const Entity *newBase = nullptr;
+               for (size_t j = 0; j < playerView.entities.size(); j++) {
+                    const Entity& building = playerView.entities[j];
+                    if (building.playerId != nullptr && *building.playerId == playerView.myId && is_building(building.entityType) && building.health<playerView.entityProperties.at(building.entityType).maxHealth) {
+                        if(building.entityType==RANGED_BASE || building.entityType==MELEE_BASE)
+                        {
+                            newBase = &building;
+                            break;
+                        }
+                        else if ((building.entityType!=RANGED_BASE && building.entityType!=MELEE_BASE) && (newBase == nullptr || 
+                                        distanceSqr(entity.position, building.position) <
+                                            distanceSqr(entity.position, newBase->position)
+                        )) {
+                                    newBase = &building;
+                                }
+                    }
+                }
+
+        if(newBase!=nullptr)
+        {
+            moveAction = shared_ptr<MoveAction>(new MoveAction(newBase->position,true,true));
+            repairAction = shared_ptr<RepairAction>(new RepairAction(newBase->id));
+        }
+        else if(buildQueue.size()>0 && info.resCount>houseCost){
                     
             int newHouseX = 0;
             int newHouseY  =0;
