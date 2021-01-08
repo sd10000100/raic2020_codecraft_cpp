@@ -45,7 +45,7 @@ Action WinStrategy::getAction(const PlayerView& playerView, DebugInterface* debu
         if (entity.playerId != nullptr && *entity.playerId == playerView.myId) {
             if (entity.entityType == BUILDER_UNIT){
                 info.buildCount++;
-                if(squardBuilders.units.size()<1 || squardBuilders.units.count(entity.id))
+                if(squardBuilders.units.size()<3 || squardBuilders.units.count(entity.id))
                     squardBuilders.addAndUpdate(playerView.currentTick, entity);
                 else squardMiner.addAndUpdate(playerView.currentTick, entity);
             }

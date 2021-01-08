@@ -79,13 +79,13 @@ inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& player
 // 
 // cerr<<squardArmy.pathToTarget.size();
 // cerr<<endl;
-cerr<<center.x<<' '<<center.y;
-cerr<<endl;
+//cerr<<center.x<<' '<<center.y;
+//cerr<<endl;
 
 
 double percentageNormalDistribution = squardArmy.getPercentageNormalDistribution();
-cerr<<percentageNormalDistribution<<'%';
-cerr<<endl;
+//cerr<<percentageNormalDistribution<<'%';
+//cerr<<endl;
     std::map<int, Entity>::iterator iter = squardArmy.units.begin();
     while (iter != squardArmy.units.end()) {
         const Entity& entity = iter->second;
@@ -141,46 +141,7 @@ cerr<<endl;
                     std::map<int,Vec2Int>::iterator it = attackers.find(entity.id);             // by iterator (b), leaves acdefghi.
                         if( it != attackers.end() )
                             attackers.erase (it);
-                }
-
-
-                // if(distSQRToEnemy<attack*attack){
-                //     moveAction = nullptr;
-                //     attackAction = shared_ptr<AttackAction>(new AttackAction(
-                //         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
-                // }
-                // else if(misfortuneСompanion.size()>1 ){
-                //     Vec2Int target = goodPointInInflMap;
-                //     // if(squardArmy.pathToTarget.size()>0)
-                //     //     target = squardArmy.pathToTarget[1];
-                //     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
-                //         target,
-                //         true,
-                //         true));
-                //     attackAction = shared_ptr<AttackAction>(new AttackAction(
-                //         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
-
-                //     std::map<int,Vec2Int>::iterator it = attackers.find(entity.id);             // by iterator (b), leaves acdefghi.
-                //         if( it != attackers.end() )
-                //             attackers.erase (it);
-                // }
-                // else
-                // {
-                //     Vec2Int target = goodPointInInflMap;
-                //     // if(squardArmy.pathToTarget.size()>0)
-                //     //     target = squardArmy.pathToTarget[1];
-                //     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
-                //         target,
-                //         true,
-                //         true));
-                //     attackAction = shared_ptr<AttackAction>(new AttackAction(
-                //         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
-
-                //     std::map<int,Vec2Int>::iterator it = attackers.find(entity.id);             // by iterator (b), leaves acdefghi.
-                //         if( it != attackers.end() )
-                //             attackers.erase (it);
-                // }
-                
+                }   
             }
 
             //это когда в тумане нихрена нету

@@ -9,6 +9,7 @@
 #include "helpers.hpp"
 #include "helpers/InfluenceMapBuilder.h"
 #include "helpers/AStar.h"
+#include "helpers/Vect2DVect2Int.h"
 #include <memory>
 #include <map>
 #include <vector>

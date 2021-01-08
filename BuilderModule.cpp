@@ -9,6 +9,9 @@ inline Action WinStrategy::getBuildCommand(Action res, const PlayerView& playerV
         //if (entity.entityType == BUILDER_UNIT) {
             validAutoAttackTargets.push_back(RESOURCE);
        // }
+
+
+       
     std::map<int, Entity>::iterator iter = squardBuilders.units.begin();
 
     while (iter != squardBuilders.units.end()) {
@@ -18,8 +21,32 @@ inline Action WinStrategy::getBuildCommand(Action res, const PlayerView& playerV
         shared_ptr<BuildAction> buildAction = nullptr;
         shared_ptr<RepairAction> repairAction = nullptr;
         shared_ptr<AttackAction> attackAction = nullptr;
-int houseCost = playerView.entityProperties.at(HOUSE).buildScore;
+        int houseCost = playerView.entityProperties.at(HOUSE).buildScore;
 
+        // double pi = 3.14159265359;
+        //     const Entity *nearestEnemy = nullptr;
+        // for (size_t j = 0; j < playerView.entities.size(); j++) {
+        //     const Entity& enemyEntity = playerView.entities[j];
+        //     if (enemyEntity.playerId != nullptr && *enemyEntity.playerId != playerView.myId) {
+        //         if (nearestEnemy == nullptr ||
+        //                         distanceSqr(entity.position, enemyEntity.position) <
+        //                             distanceSqr(entity.position, nearestEnemy->position)
+        //                         ) {
+        //                     nearestEnemy = &enemyEntity;
+        //                 }
+        //     }
+        // }
+        // if(nearestEnemy!=nullptr)
+        // {     
+        //     int attackEnemy = playerView.entityProperties.at(nearestEnemy->entityType).attack->attackRange;
+        
+        //     if(distanceSqr(entity.position, nearestEnemy->position)<=attackEnemy*attackEnemy+1){
+        //         Vect2DVect2Int vectr = Vect2DVect2Int(entity.position,nearestEnemy->position);
+        //         vectr.turn(pi);
+        //         moveAction = shared_ptr<MoveAction>(new MoveAction(vectr.finish,true,false));
+        //         break;
+        //     }
+        // }
 
         const Entity *newBase = nullptr;
                for (size_t j = 0; j < playerView.entities.size(); j++) {

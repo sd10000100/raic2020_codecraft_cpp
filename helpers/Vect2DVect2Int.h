@@ -2,8 +2,8 @@
 // Created by badru on 18.01.2020.
 //
 
-#ifndef AICUP2019_VECT2D_H
-#define AICUP2019_VECT2D_H
+#ifndef AICUP2019_Vect2DVect2Int_H
+#define AICUP2019_Vect2DVect2Int_H
 
 #include "Point2D.h"
 #include "../model/Vec2Int.hpp"
@@ -31,4 +31,4 @@ struct Vect2DVect2Int {
         finish.y = start.y + y;
     }
 };
-#endif //AICUP2019_VECT2D_H
+#endif //AICUP2019_Vect2DVect2Int_H
