@@ -89,10 +89,14 @@ public:
      Squard squardRepairs;
      Squard squardRanges;
      Squard squardArmy;
+     Squard squardArmy2;
+     Squard squardArmy3;
      Citadel citadel;
     int idBuilder;
     WinStrategy();
-    Action getAttackCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface);
+
+    Squard& getMinArmy();
+    Action getAttackCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface, Squard Army);
     Action getMinerCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface);
     Action getBuildCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface);
     Action getCitadelCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface);

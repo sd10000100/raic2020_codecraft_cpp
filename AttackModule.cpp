@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cmath>
 
-inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface)
+inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface, Squard Army)
 {
     //AStar aStarPathfinder = AStar();
     int width = playerView.mapSize;
@@ -46,7 +46,7 @@ inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& player
     shared_ptr<RepairAction> repairAction = nullptr;
     shared_ptr<AttackAction> attackAction = nullptr;
 
-    Vec2Int center = squardArmy.getCenter();
+    Vec2Int center = Army.getCenter();
     const Entity *nearestEnemy = nullptr;
     for (size_t j = 0; j < playerView.entities.size(); j++) {
         const Entity& enemyEntity = playerView.entities[j];
@@ -83,11 +83,11 @@ inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& player
 //cerr<<endl;
 
 
-double percentageNormalDistribution = squardArmy.getPercentageNormalDistribution();
+double percentageNormalDistribution = Army.getPercentageNormalDistribution();
 //cerr<<percentageNormalDistribution<<'%';
 //cerr<<endl;
-    std::map<int, Entity>::iterator iter = squardArmy.units.begin();
-    while (iter != squardArmy.units.end()) {
+    std::map<int, Entity>::iterator iter = Army.units.begin();
+    while (iter != Army.units.end()) {
         const Entity& entity = iter->second;
         const EntityProperties& properties = playerView.entityProperties.at(entity.entityType);
 
@@ -109,7 +109,7 @@ double percentageNormalDistribution = squardArmy.getPercentageNormalDistribution
                 int attack = properties.attack->attackRange;
                 //attack->attack_range;
 
-                vector<int>  misfortuneCompanion =  squardArmy.entitiesCloserEqToPoint(nearestEnemy->position,properties.sightRange+1);
+                vector<int>  misfortuneCompanion =  Army.entitiesCloserEqToPoint(nearestEnemy->position,properties.sightRange+1);
                 int distSQRToEnemy = distanceSqr(entity.position, nearestEnemy->position);
 
                 if(distSQRToEnemy==attack*attack)
