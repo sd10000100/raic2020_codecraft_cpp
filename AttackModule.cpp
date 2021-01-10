@@ -50,7 +50,7 @@ inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& player
     const Entity *nearestEnemy = nullptr;
     for (size_t j = 0; j < playerView.entities.size(); j++) {
         const Entity& enemyEntity = playerView.entities[j];
-        if (enemyEntity.playerId != nullptr && *enemyEntity.playerId != playerView.myId) {
+        if (enemyEntity.playerId != nullptr && *enemyEntity.playerId == Army.enemyId) {
             if (nearestEnemy == nullptr ||
                             distanceSqr(center, enemyEntity.position) <
                                 distanceSqr(center, nearestEnemy->position)
@@ -118,6 +118,17 @@ double percentageNormalDistribution = Army.getPercentageNormalDistribution();
                     attackAction = shared_ptr<AttackAction>(new AttackAction(
                         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
                 }
+                else if(distSQRToEnemy<attack*attack)
+                {
+                    Vect2DVect2Int v = Vect2DVect2Int(entity.position,nearestEnemy->position);
+                    v.turn(3.14159);
+                     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
+                        v.finish,
+                        true,
+                        true));
+                    attackAction = shared_ptr<AttackAction>(new AttackAction(
+                        nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+                }
                 else if(distSQRToEnemy>attack*attack && misfortuneCompanion.size()>1)
                 {
                     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
@@ -129,8 +140,7 @@ double percentageNormalDistribution = Army.getPercentageNormalDistribution();
                 }
                 else {
                     Vec2Int target = goodPointInInflMap;
-                    // if(squardArmy.pathToTarget.size()>0)
-                    //     target = squardArmy.pathToTarget[1];
+                    
                     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
                         target,
                         true,
@@ -138,9 +148,9 @@ double percentageNormalDistribution = Army.getPercentageNormalDistribution();
                     attackAction = shared_ptr<AttackAction>(new AttackAction(
                         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
 
-                    std::map<int,Vec2Int>::iterator it = attackers.find(entity.id);             // by iterator (b), leaves acdefghi.
-                        if( it != attackers.end() )
-                            attackers.erase (it);
+                    // std::map<int,Vec2Int>::iterator it = attackers.find(entity.id);             // by iterator (b), leaves acdefghi.
+                    //     if( it != attackers.end() )
+                    //         attackers.erase (it);
                 }   
             }
 
@@ -169,7 +179,7 @@ double percentageNormalDistribution = Army.getPercentageNormalDistribution();
         res.entityActions[entity.id] = EntityAction(
             moveAction,
             buildAction,
-            attackAction,
+            nullptr,
             repairAction);
         ++iter;
     }

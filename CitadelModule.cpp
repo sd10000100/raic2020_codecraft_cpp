@@ -10,36 +10,36 @@ inline Action WinStrategy::getCitadelCommand(Action res, const PlayerView& playe
     if(buildQueue.size()>0)
         reservForBuild = playerView.entityProperties.at(buildQueue[0].typeByild).initialCost;
 //мечники
-     std::map<int, Entity>::iterator iter = citadel.meleeBuilds.begin();
-    while (iter != citadel.meleeBuilds.end()) {
-        const Entity& entity = iter->second;
+    std::map<int, Entity>::iterator iter = citadel.meleeBuilds.begin();
+    // while (iter != citadel.meleeBuilds.end()) {
+    //     const Entity& entity = iter->second;
 
-        shared_ptr<MoveAction> moveAction = nullptr;
-        shared_ptr<BuildAction> buildAction = nullptr;
-        shared_ptr<RepairAction> repairAction = nullptr;
-        shared_ptr<AttackAction> attackAction = nullptr;
-        const EntityProperties& properties = playerView.entityProperties.at(entity.entityType);
-        EntityType entityType = properties.build->options[0];
+    //     shared_ptr<MoveAction> moveAction = nullptr;
+    //     shared_ptr<BuildAction> buildAction = nullptr;
+    //     shared_ptr<RepairAction> repairAction = nullptr;
+    //     shared_ptr<AttackAction> attackAction = nullptr;
+    //     const EntityProperties& properties = playerView.entityProperties.at(entity.entityType);
+    //     EntityType entityType = properties.build->options[0];
 
-        if (info.resCount-reservForBuild>countMeleeUnit && (countRangedUnit>countMeleeUnit*3 || info.rangeCount==0))
-        {
-            buildAction = shared_ptr<BuildAction>(new BuildAction(
-                MELEE_UNIT,
-                Vec2Int(entity.position.x + properties.size, entity.position.y + properties.size - 1)));
-            info.resCount-=countMeleeUnit;
-        }
-        else
-        {
-            buildAction = nullptr;
-        }
+    //     if (info.resCount-reservForBuild>countMeleeUnit && (countRangedUnit>countMeleeUnit*3 || info.rangeCount==0))
+    //     {
+    //         buildAction = shared_ptr<BuildAction>(new BuildAction(
+    //             MELEE_UNIT,
+    //             Vec2Int(entity.position.x + properties.size, entity.position.y + properties.size - 1)));
+    //         info.resCount-=countMeleeUnit;
+    //     }
+    //     else
+    //     {
+    //         buildAction = nullptr;
+    //     }
 
-        res.entityActions[entity.id] = EntityAction(
-            moveAction,
-            buildAction,
-            attackAction,
-            repairAction);
-        ++iter;
-    }
+    //     res.entityActions[entity.id] = EntityAction(
+    //         moveAction,
+    //         buildAction,
+    //         attackAction,
+    //         repairAction);
+    //     ++iter;
+    // }
 // лучники
     iter = citadel.rangeBuilds.begin();
     while (iter != citadel.rangeBuilds.end()) {

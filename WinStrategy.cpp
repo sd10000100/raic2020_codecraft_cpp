@@ -38,13 +38,33 @@ Squard& WinStrategy::getMinArmy(){
 
 Action WinStrategy::getAction(const PlayerView& playerView, DebugInterface* debugInterface){
     Action result = Action(unordered_map<int, EntityAction>());
-    info.clear();
     
-    for (const Player &player: playerView.players)
+    info.clear();
+    for (const Player &player: playerView.players){
         if (player.id==playerView.myId){
                 info.resCount = player.resource;
                 break;
+        }
+        else
+        {
+            if(playerView.players.size()==2 && squardArmy.enemyId==-1)
+            {
+                squardArmy.enemyId==player.id;
+                squardArmy2.enemyId==player.id;
+                squardArmy3.enemyId==player.id;
             }
+            else{
+                if (squardArmy.enemyId==-1)
+                {
+                    squardArmy.enemyId==player.id;
+                }
+                else if(squardArmy.enemyId!=player.id && squardArmy2.enemyId==-1)
+                {squardArmy2.enemyId==player.id;}
+                else if(squardArmy.enemyId!=player.id && squardArmy2.enemyId!=player.id && squardArmy3.enemyId==-1)
+                {squardArmy3.enemyId==player.id;}
+            }
+        }
+    }
     if (playerView.fogOfWar)
          buildQueue = buildQueueSecondRaund;
     else buildQueue = buildQueueFirstRaund;
@@ -104,9 +124,6 @@ Action WinStrategy::getAction(const PlayerView& playerView, DebugInterface* debu
     squardMiner.removeDead(playerView.currentTick);
     citadel.removeRuin(playerView.currentTick);
 
-    cerr<<squardArmy.units.size()<<" squardArmy"<<endl;
-cerr<<squardArmy2.units.size()<<" squardArmy2"<<endl;
-cerr<<squardArmy3.units.size()<<" squardArmy3"<<endl;
 
     result = getCitadelCommand(result, playerView, debugInterface);
     result = getBuildCommand(result, playerView, debugInterface);

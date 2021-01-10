@@ -21,6 +21,7 @@ public:
     map<int,Entity> units;
     vector<Vec2Int> pathToTarget;
     SquardType squadGoal;
+    int enemyId = -1;
     Squard(){};
     
     void addAndUpdate(int presentTick, Entity entity){
