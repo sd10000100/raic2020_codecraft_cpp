@@ -1,4 +1,4 @@
-#include "WinStrategy.hpp"
+#include "../WinStrategy.hpp"
 //#include "helpers.hpp"
 
 

@@ -1,14 +1,14 @@
 #include "WinStrategy.hpp"
 //#include "helpers.hpp"
-#include "BaseDevelopmentScheme.hpp"
+#include "Common/BaseDevelopmentScheme.hpp"
 #include <exception>
 #include <map>
 #include <algorithm>
 #include <iostream>
-#include "AttackModule.cpp"
-#include "CitadelModule.cpp"
-#include "MinerModule.cpp"
-#include "BuilderModule.cpp"
+#include "Actions/AttackModule.cpp"
+#include "Actions/CitadelModule.cpp"
+#include "Actions/MinerModule.cpp"
+#include "Actions/BuilderModule.cpp"
 using namespace std;
 
 

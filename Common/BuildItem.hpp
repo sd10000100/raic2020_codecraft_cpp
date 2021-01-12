@@ -1,7 +1,7 @@
 #ifndef _BUILD_ITEM_HPP_
 #define _BUILD_ITEM_HPP_
 
-#include "model/Model.hpp"
+#include "../model/Model.hpp"
 
 using namespace std;
 

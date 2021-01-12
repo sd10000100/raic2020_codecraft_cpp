@@ -1,6 +1,6 @@
 #include <vector>
 #include "BuildItem.hpp"
-#include "model/Model.hpp"
+#include "../model/Model.hpp"
 
 const std::vector<BuildItem> buildQueueFirstRaund = {
     BuildItem(BUILDER_BASE, Vec2Int(5,5)),

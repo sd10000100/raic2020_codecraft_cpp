@@ -1,8 +1,8 @@
 #ifndef _SQUARD_HPP_
 #define _SQUARD_HPP_
 
-#include "model/Model.hpp"
-#include "helpers.hpp"
+#include "../model/Model.hpp"
+#include "../helpers.hpp"
 #include <map>
 #include <cmath>
 

@@ -1,6 +1,6 @@
-#include "WinStrategy.hpp"
+#include "../WinStrategy.hpp"
 //#include "helpers.hpp"
-#include "MagicProperties.hpp"
+#include "../Common/MagicProperties.hpp"
 
 inline Action WinStrategy::getCitadelCommand(Action res, const PlayerView& playerView, DebugInterface* debugInterface)
 {    

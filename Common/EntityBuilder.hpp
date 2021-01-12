@@ -1,7 +1,7 @@
 #ifndef _ENTITY_BUILDER_HPP_
 #define _ENTITY_BUILDER_HPP_
 
-#include "model/Model.hpp"
+#include "../model/Model.hpp"
 
 using namespace std;
 

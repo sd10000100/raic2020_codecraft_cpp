@@ -2,10 +2,10 @@
 #define _WIN_STRATEGY_HPP_
 
 #include "DebugInterface.hpp"
-#include "BuildItem.hpp"
-#include "Squard.hpp"
-#include "Citadel.hpp"
-#include "EntityBuilder.hpp"
+#include "Common/BuildItem.hpp"
+#include "Common/Squard.hpp"
+#include "Common/Citadel.hpp"
+#include "Common/EntityBuilder.hpp"
 #include "helpers.hpp"
 #include "helpers/InfluenceMapBuilder.h"
 #include "helpers/AStar.h"

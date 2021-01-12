@@ -1,7 +1,7 @@
 #ifndef _ARMY_HPP_
 #define _ARMY_HPP_
 
-#include "model/Model.hpp"
+#include "../model/Model.hpp"
 #include "Squard.hpp"
 #include <map>
 

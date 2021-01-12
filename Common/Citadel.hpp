@@ -1,7 +1,7 @@
 #ifndef _CITADEL_HPP_
 #define _CITADEL_HPP_
 
-#include "model/Model.hpp"
+#include "../model/Model.hpp"
 #include <map>
 
 using namespace std;
