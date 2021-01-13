@@ -23,18 +23,9 @@ WinStrategy::WinStrategy(){
     squardMiner = Squard();
     squardRanges = Squard();
     squardArmy = Squard();
-    squardArmy2 = Squard();
-    squardArmy3 = Squard();
     citadel = Citadel();
 }
 
-Squard& WinStrategy::getMinArmy(){
-
-    Squard& smallest = squardArmy;
-    if (smallest.units.size() > squardArmy2.units.size()) smallest = squardArmy2;
-    if (smallest.units.size() > squardArmy3.units.size()) smallest = squardArmy3;
-    return smallest;
-}
 
 Action WinStrategy::getAction(const PlayerView& playerView, DebugInterface* debugInterface){
     Action result = Action(unordered_map<int, EntityAction>());
@@ -45,25 +36,7 @@ Action WinStrategy::getAction(const PlayerView& playerView, DebugInterface* debu
                 info.resCount = player.resource;
                 break;
         }
-        else
-        {
-            if(playerView.players.size()==2 && squardArmy.enemyId==-1)
-            {
-                squardArmy.enemyId==player.id;
-                squardArmy2.enemyId==player.id;
-                squardArmy3.enemyId==player.id;
-            }
-            else{
-                if (squardArmy.enemyId==-1)
-                {
-                    squardArmy.enemyId==player.id;
-                }
-                else if(squardArmy.enemyId!=player.id && squardArmy2.enemyId==-1)
-                {squardArmy2.enemyId==player.id;}
-                else if(squardArmy.enemyId!=player.id && squardArmy2.enemyId!=player.id && squardArmy3.enemyId==-1)
-                {squardArmy3.enemyId==player.id;}
-            }
-        }
+        
     }
     if (playerView.fogOfWar)
          buildQueue = buildQueueSecondRaund;
@@ -84,23 +57,8 @@ Action WinStrategy::getAction(const PlayerView& playerView, DebugInterface* debu
                     info.rangeCount++;
                 if (entity.entityType == MELEE_UNIT)
                     info.meleeCount++;
-                //getMinArmy().addAndUpdate(playerView.currentTick, entity);
+                squardArmy.addAndUpdate(playerView.currentTick, entity);
 
-                int smallest = 1;
-                int countsm = squardArmy.units.size();
-                if (countsm > squardArmy2.units.size()) {smallest = 2;countsm = squardArmy2.units.size();}
-                if (countsm > squardArmy3.units.size()) {smallest = 3;countsm = squardArmy3.units.size();}
-                if(smallest==1 || squardArmy.units.count(entity.id))
-                    squardArmy.addAndUpdate(playerView.currentTick, entity);
-                else if(smallest==2 || squardArmy2.units.count(entity.id))
-                    squardArmy2.addAndUpdate(playerView.currentTick, entity);
-                else 
-                    squardArmy3.addAndUpdate(playerView.currentTick, entity);
-                // if(squardArmy.units.size()<squardArmy2.units.size() || squardArmy.units.size()<squardArmy3.units.size())
-                //     squardArmy.addAndUpdate(playerView.currentTick, entity);
-                // else if (squardArmy2.units.size()<squardArmy.units.size() || squardArmy2.units.size()<squardArmy3.units.size())
-                //     squardArmy2.addAndUpdate(playerView.currentTick, entity);
-                // else squardArmy3.addAndUpdate(playerView.currentTick, entity);
             }
             if(is_building(entity.entityType)){
                 std::vector<BuildItem>::iterator it = buildQueue.begin();
@@ -119,8 +77,6 @@ Action WinStrategy::getAction(const PlayerView& playerView, DebugInterface* debu
 
     squardBuilders.removeDead(playerView.currentTick);
     squardArmy.removeDead(playerView.currentTick);
-    squardArmy2.removeDead(playerView.currentTick);
-    squardArmy3.removeDead(playerView.currentTick);
     squardMiner.removeDead(playerView.currentTick);
     citadel.removeRuin(playerView.currentTick);
 
@@ -129,7 +85,5 @@ Action WinStrategy::getAction(const PlayerView& playerView, DebugInterface* debu
     result = getBuildCommand(result, playerView, debugInterface);
     result = getMinerCommand(result, playerView, debugInterface);
     result = getAttackCommand(result, playerView, debugInterface,squardArmy);
-    result = getAttackCommand(result, playerView, debugInterface,squardArmy2);
-    result = getAttackCommand(result, playerView, debugInterface,squardArmy3);
     return result;
 }

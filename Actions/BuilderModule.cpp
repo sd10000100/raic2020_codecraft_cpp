@@ -23,30 +23,6 @@ inline Action WinStrategy::getBuildCommand(Action res, const PlayerView& playerV
         shared_ptr<AttackAction> attackAction = nullptr;
         int houseCost = playerView.entityProperties.at(HOUSE).buildScore;
 
-        // double pi = 3.14159265359;
-        //     const Entity *nearestEnemy = nullptr;
-        // for (size_t j = 0; j < playerView.entities.size(); j++) {
-        //     const Entity& enemyEntity = playerView.entities[j];
-        //     if (enemyEntity.playerId != nullptr && *enemyEntity.playerId != playerView.myId) {
-        //         if (nearestEnemy == nullptr ||
-        //                         distanceSqr(entity.position, enemyEntity.position) <
-        //                             distanceSqr(entity.position, nearestEnemy->position)
-        //                         ) {
-        //                     nearestEnemy = &enemyEntity;
-        //                 }
-        //     }
-        // }
-        // if(nearestEnemy!=nullptr)
-        // {     
-        //     int attackEnemy = playerView.entityProperties.at(nearestEnemy->entityType).attack->attackRange;
-        
-        //     if(distanceSqr(entity.position, nearestEnemy->position)<=attackEnemy*attackEnemy+1){
-        //         Vect2DVect2Int vectr = Vect2DVect2Int(entity.position,nearestEnemy->position);
-        //         vectr.turn(pi);
-        //         moveAction = shared_ptr<MoveAction>(new MoveAction(vectr.finish,true,false));
-        //         break;
-        //     }
-        // }
 
         const Entity *newBase = nullptr;
                for (size_t j = 0; j < playerView.entities.size(); j++) {
@@ -81,12 +57,14 @@ inline Action WinStrategy::getBuildCommand(Action res, const PlayerView& playerV
             bool isPrior = false;
                      
             int l = 0;
+            int minDist = 10000;
             while(l<buildQueue.size())
             {
                 isEmpty = IsPlaceEmptyForHouse(playerView, buildQueue[l].position,entity.id, playerView.entityProperties.at(buildQueue[l].typeByild).size);
-                
-                if((isEmpty || buildQueue[l].isPriority) && !buildQueue[l].started)// || buildQueue[l].isPriority
+                int dist = distanceSqr(entity.position, buildQueue[l].position);
+                if((isEmpty || buildQueue[l].isPriority) && !buildQueue[l].started && dist<minDist)// || buildQueue[l].isPriority
                 {
+                    minDist = dist;
                     newHouseX = buildQueue[l].position.x;
                     newHouseY = buildQueue[l].position.y;
                     tpe = buildQueue[l].typeByild;
@@ -95,7 +73,7 @@ inline Action WinStrategy::getBuildCommand(Action res, const PlayerView& playerV
                     buildQueue[l].started = true;
                     builders[entity.id].BuildPosition = Vec2Int(newHouseX,newHouseY);
                     builders[entity.id].isBuild=false;
-                    break;
+                    //break;
                 }
                 l++;
             }
