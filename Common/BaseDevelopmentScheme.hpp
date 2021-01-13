@@ -9,38 +9,19 @@ const std::vector<BuildItem> buildQueueFirstRaund = {
     BuildItem(MELEE_BASE, Vec2Int(5,15)),
     BuildItem(HOUSE, Vec2Int(11,7)),
     BuildItem(HOUSE, Vec2Int(11,15)),
-
-    BuildItem(TURRET, Vec2Int(1,22)),
 BuildItem(HOUSE, Vec2Int(3,21)),
-
-BuildItem(TURRET, Vec2Int(7,22)),
 BuildItem(HOUSE, Vec2Int(9,21)),
-BuildItem(TURRET, Vec2Int(12,20)),
-BuildItem(TURRET, Vec2Int(15,22)),
 BuildItem(HOUSE, Vec2Int(17,21)),
-BuildItem(TURRET, Vec2Int(15,19)),
-BuildItem(TURRET, Vec2Int(17,18)),
 BuildItem(HOUSE, Vec2Int(17,11)),
 BuildItem(HOUSE, Vec2Int(13,11)),
-
-BuildItem(TURRET, Vec2Int(19,15)),
 BuildItem(HOUSE, Vec2Int(21,15)),
-BuildItem(TURRET, Vec2Int(22,13)),
-
 BuildItem(HOUSE, Vec2Int(21,9)),
-BuildItem(TURRET, Vec2Int(22,7)),
-
 BuildItem(HOUSE, Vec2Int(21,3)),
-BuildItem(TURRET, Vec2Int(22,1)),
-
-
 
 BuildItem(HOUSE, Vec2Int(17,1)),
 BuildItem(HOUSE, Vec2Int(13,1)),
 BuildItem(HOUSE, Vec2Int(9,1)),
 BuildItem(HOUSE, Vec2Int(9,11)),
-
-
 BuildItem(HOUSE, Vec2Int(5,11)),
 BuildItem(HOUSE, Vec2Int(1,17)),
 BuildItem(HOUSE, Vec2Int(1,13)),
@@ -48,6 +29,18 @@ BuildItem(HOUSE, Vec2Int(1,9)),
 BuildItem(HOUSE, Vec2Int(1,5)),
 BuildItem(HOUSE, Vec2Int(1,1)),
 BuildItem(HOUSE, Vec2Int(5,1)),
+
+    BuildItem(TURRET, Vec2Int(1,22)),
+BuildItem(TURRET, Vec2Int(7,22)),
+BuildItem(TURRET, Vec2Int(12,20)),
+BuildItem(TURRET, Vec2Int(15,22)),
+BuildItem(TURRET, Vec2Int(15,19)),
+BuildItem(TURRET, Vec2Int(17,18)),
+BuildItem(TURRET, Vec2Int(19,15)),
+BuildItem(TURRET, Vec2Int(22,13)),
+BuildItem(TURRET, Vec2Int(22,7)),
+BuildItem(TURRET, Vec2Int(22,1)),
+
 
 
 BuildItem(TURRET, Vec2Int(20,18)),

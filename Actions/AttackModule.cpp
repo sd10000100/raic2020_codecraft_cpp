@@ -179,7 +179,7 @@ double percentageNormalDistribution = Army.getPercentageNormalDistribution();
         res.entityActions[entity.id] = EntityAction(
             moveAction,
             buildAction,
-            nullptr,
+            attackAction,
             repairAction);
         ++iter;
     }
