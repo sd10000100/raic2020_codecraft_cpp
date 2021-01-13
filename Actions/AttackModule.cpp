@@ -47,18 +47,7 @@ inline Action WinStrategy::getAttackCommand(Action res, const PlayerView& player
     shared_ptr<AttackAction> attackAction = nullptr;
 
     Vec2Int center = Army.getCenter();
-    const Entity *nearestEnemy = nullptr;
-    for (size_t j = 0; j < playerView.entities.size(); j++) {
-        const Entity& enemyEntity = playerView.entities[j];
-        if (enemyEntity.playerId != nullptr && *enemyEntity.playerId == Army.enemyId) {
-            if (nearestEnemy == nullptr ||
-                            distanceSqr(center, enemyEntity.position) <
-                                distanceSqr(center, nearestEnemy->position)
-                            ) {
-                        nearestEnemy = &enemyEntity;
-                    }
-        }
-    }
+
 
 
     //  if (nearestEnemy != nullptr && (playerView.currentTick%20==0 )){//squardArmy.pathToTarget.size()==0 || 
@@ -91,32 +80,64 @@ double percentageNormalDistribution = Army.getPercentageNormalDistribution();
         const Entity& entity = iter->second;
         const EntityProperties& properties = playerView.entityProperties.at(entity.entityType);
 
-        if(percentageNormalDistribution<60)
-        {
-            moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
-                center,
-                true,
-                true));
-            attackAction = shared_ptr<AttackAction>(new AttackAction(
-                nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
-            
+
+        const Entity *nearestEnemy = nullptr;
+        for (size_t j = 0; j < playerView.entities.size(); j++) {
+            const Entity& enemyEntity = playerView.entities[j];
+            if (enemyEntity.playerId != nullptr && *enemyEntity.playerId != playerView.myId) {
+                if (nearestEnemy == nullptr ||
+                                distanceSqr(entity.position, enemyEntity.position) <
+                                    distanceSqr(entity.position, nearestEnemy->position)
+                                ) {
+                            nearestEnemy = &enemyEntity;
+                        }
+            }
         }
-        else{
+        // if(percentageNormalDistribution<60)
+        // {
+        //     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
+        //         center,
+        //         true,
+        //         true));
+        //     attackAction = shared_ptr<AttackAction>(new AttackAction(
+        //         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+            
+        // }
+        // else{
 
     
             if (nearestEnemy != nullptr){    
 
-                int attack = properties.attack->attackRange;
+                int attack = properties.attack->attackRange+1;
                 //attack->attack_range;
 
-                vector<int>  misfortuneCompanion =  Army.entitiesCloserEqToPoint(nearestEnemy->position,properties.sightRange+1);
+                //vector<int>  misfortuneCompanion =  Army.entitiesCloserEqToPoint(nearestEnemy->position,attack+1);
                 int distSQRToEnemy = distanceSqr(entity.position, nearestEnemy->position);
-
-                if(distSQRToEnemy==attack*attack)
+                vector<int>  misfortuneCompanion =  Army.entitiesCloserEqToPoint(nearestEnemy->position,sqrt(distSQRToEnemy));
+                if(distSQRToEnemy==(attack)*(attack) && misfortuneCompanion.size()>1) 
                 {
                     moveAction = nullptr;
+                    // moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
+                    //     nearestEnemy->position,
+                    //     true,
+                    //     true));
+                    shared_ptr<int> target = shared_ptr<int>(new int(nearestEnemy->id));
+                    //int targId = (int);//shared_ptr<int>(nearestEnemy->id);
                     attackAction = shared_ptr<AttackAction>(new AttackAction(
-                        nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+                        target, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+                }
+                else if(distSQRToEnemy==(attack)*(attack)) 
+                {
+                    Vect2DVect2Int v = Vect2DVect2Int(entity.position,nearestEnemy->position);
+                    v.turn(3.14159);
+                     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
+                        v.finish,
+                        true,
+                        true));
+                    shared_ptr<int> target = shared_ptr<int>(new int(nearestEnemy->id));
+                    //int targId = (int);//shared_ptr<int>(nearestEnemy->id);
+                    attackAction = shared_ptr<AttackAction>(new AttackAction(
+                        target, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
                 }
                 else if(distSQRToEnemy<attack*attack)
                 {
@@ -127,55 +148,55 @@ double percentageNormalDistribution = Army.getPercentageNormalDistribution();
                         true,
                         true));
                     attackAction = shared_ptr<AttackAction>(new AttackAction(
-                        nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+                        shared_ptr<int>(new int(nearestEnemy->id)), shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
                 }
-                else if(distSQRToEnemy>attack*attack && misfortuneCompanion.size()>1)
+                else if(distSQRToEnemy>attack*attack) //&& misfortuneCompanion.size()>1
                 {
                     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
                         nearestEnemy->position,
                         true,
                         true));
                     attackAction = shared_ptr<AttackAction>(new AttackAction(
-                        nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+                        shared_ptr<int>(new int(nearestEnemy->id)), shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
                 }
-                else {
-                    Vec2Int target = goodPointInInflMap;
+                // else {
+                //     Vec2Int target = nearestEnemy->position;//goodPointInInflMap;
                     
-                    moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
-                        target,
-                        true,
-                        true));
-                    attackAction = shared_ptr<AttackAction>(new AttackAction(
-                        nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+                //     moveAction = shared_ptr<MoveAction>(new MoveAction(//Vec2Int(40,40),
+                //         target,
+                //         true,
+                //         true));
+                //     attackAction = shared_ptr<AttackAction>(new AttackAction(
+                //         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
 
-                    // std::map<int,Vec2Int>::iterator it = attackers.find(entity.id);             // by iterator (b), leaves acdefghi.
-                    //     if( it != attackers.end() )
-                    //         attackers.erase (it);
-                }   
+                //     // std::map<int,Vec2Int>::iterator it = attackers.find(entity.id);             // by iterator (b), leaves acdefghi.
+                //     //     if( it != attackers.end() )
+                //     //         attackers.erase (it);
+                // }   
             }
 
             //это когда в тумане нихрена нету
-            else if(!attackers.count(entity.id) || (attackers[entity.id].x == entity.position.x && attackers[entity.id].y == entity.position.y)){ 
-                int randx = rand() % 80;
-                int randy = rand() % 80;
-                moveAction = shared_ptr<MoveAction>(new MoveAction(Vec2Int(randx, randy),
-                    //nearestEnemy->position,
-                    true,
-                    true));
-                attackAction = shared_ptr<AttackAction>(new AttackAction(
-                    nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
-            attackers[entity.id] = Vec2Int(randx, randy);
+            // else if(!attackers.count(entity.id) || (attackers[entity.id].x == entity.position.x && attackers[entity.id].y == entity.position.y)){ 
+            //     int randx = rand() % 80;
+            //     int randy = rand() % 80;
+            //     moveAction = shared_ptr<MoveAction>(new MoveAction(Vec2Int(randx, randy),
+            //         //nearestEnemy->position,
+            //         true,
+            //         true));
+            //     attackAction = shared_ptr<AttackAction>(new AttackAction(
+            //         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+            // attackers[entity.id] = Vec2Int(randx, randy);
         
-            }
-            else{
-                moveAction = shared_ptr<MoveAction>(new MoveAction( attackers[entity.id],
-                    //nearestEnemy->position,
-                    true,
-                    true));
-                attackAction = shared_ptr<AttackAction>(new AttackAction(
-                    nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
-            }
-        }
+            // }
+            // else{
+            //     moveAction = shared_ptr<MoveAction>(new MoveAction( attackers[entity.id],
+            //         //nearestEnemy->position,
+            //         true,
+            //         true));
+            //     attackAction = shared_ptr<AttackAction>(new AttackAction(
+            //         nullptr, shared_ptr<AutoAttack>(new AutoAttack(properties.sightRange, validAutoAttackTargets))));
+            // }
+       // }
         res.entityActions[entity.id] = EntityAction(
             moveAction,
             buildAction,

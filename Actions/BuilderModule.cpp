@@ -62,7 +62,7 @@ inline Action WinStrategy::getBuildCommand(Action res, const PlayerView& playerV
             {
                 isEmpty = IsPlaceEmptyForHouse(playerView, buildQueue[l].position,entity.id, playerView.entityProperties.at(buildQueue[l].typeByild).size);
                 int dist = distanceSqr(entity.position, buildQueue[l].position);
-                if((isEmpty || buildQueue[l].isPriority) && !buildQueue[l].started && dist<minDist)// || buildQueue[l].isPriority
+                if(((isEmpty && dist<minDist) || buildQueue[l].isPriority) && !buildQueue[l].started)// || buildQueue[l].isPriority
                 {
                     minDist = dist;
                     newHouseX = buildQueue[l].position.x;
@@ -73,7 +73,8 @@ inline Action WinStrategy::getBuildCommand(Action res, const PlayerView& playerV
                     buildQueue[l].started = true;
                     builders[entity.id].BuildPosition = Vec2Int(newHouseX,newHouseY);
                     builders[entity.id].isBuild=false;
-                    //break;
+                    if (buildQueue[l].isPriority)
+                        break;
                 }
                 l++;
             }
